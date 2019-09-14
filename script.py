@@ -201,7 +201,7 @@ def main(genomes, config):
         ge.append(genome)
 
     base = Base(730)
-    pipes = [Pipe(600)]
+    pipes = [Pipe(400)]
     win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     clock = pygame.time.Clock()  # in-game clock to control frame rate
 
@@ -260,8 +260,8 @@ def main(genomes, config):
         if add_pipe:
             score += 1
             for genome in ge:
-                genome.fitness += 1
-            pipes.append(Pipe(600))
+                genome.fitness += 5
+            pipes.append(Pipe(450))
 
         # removal of pipes
         for r in rem:
