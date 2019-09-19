@@ -19,6 +19,8 @@ BACKGROUND_IMG = pygame.transform.scale2x(
 
 STAT_FONT = pygame.font.SysFont('comicsans', 50)
 
+DRAW_LINES = True
+
 
 class Bird:
 
@@ -170,7 +172,7 @@ class Base:
         win.blit(self.IMG, (self.x2, self.y))
 
 
-def draw_window(win, birds, pipes, base, score):
+def draw_window(win, birds, pipes, base, score, pipe_ind):
     win.blit(BACKGROUND_IMG, (0, 0))
 
     for pipe in pipes:
@@ -182,6 +184,14 @@ def draw_window(win, birds, pipes, base, score):
     base.draw(win)
 
     for bird in birds:
+        # draw lines from bird to pipe
+        if DRAW_LINES:
+            try:
+                pygame.draw.line(win, (255,0,0), (bird.x+bird.img.get_width()/2, bird.y + bird.img.get_height()/2), (pipes[pipe_ind].x + pipes[pipe_ind].PIPE_TOP.get_width()/2, pipes[pipe_ind].height), 5)
+                pygame.draw.line(win, (255,0,0), (bird.x+bird.img.get_width()/2, bird.y + bird.img.get_height()/2), (pipes[pipe_ind].x + pipes[pipe_ind].PIPE_BOTTOM.get_width()/2, pipes[pipe_ind].bottom), 5)
+            except:
+                pass
+        # draw bird
         bird.draw(win)
 
     pygame.display.update()
@@ -201,7 +211,7 @@ def main(genomes, config):
         ge.append(genome)
 
     base = Base(730)
-    pipes = [Pipe(400)]
+    pipes = [Pipe(500)]
     win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     clock = pygame.time.Clock()  # in-game clock to control frame rate
 
@@ -209,7 +219,7 @@ def main(genomes, config):
 
     run = True
     while run:
-        clock.tick(30)  # at most 30 ticks per second
+        clock.tick(100)  # at most 30 ticks per second
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -261,7 +271,7 @@ def main(genomes, config):
             score += 1
             for genome in ge:
                 genome.fitness += 5
-            pipes.append(Pipe(450))
+            pipes.append(Pipe(500))
 
         # removal of pipes
         for r in rem:
@@ -275,7 +285,7 @@ def main(genomes, config):
                 ge.pop(x)
 
         base.move()
-        draw_window(win, birds, pipes, base, score)
+        draw_window(win, birds, pipes, base, score, pipe_ind)
 
 
 def run(config_path):
